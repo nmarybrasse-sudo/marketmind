@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MarketMind — Competitor Intelligence</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy-900: #0a0f1e;
+      --navy-800: #0f1729;
+      --navy-700: #162040;
+      --navy-600: #1e2d57;
+      --navy-500: #263870;
+      --accent:   #4f7cff;
+      --accent-dim: #3560d8;
+      --teal:     #00c9b1;
+      --white:    #ffffff;
+      --gray-100: #f0f4ff;
+      --gray-200: #d8e0f3;
+      --gray-400: #8b9abf;
+      --gray-500: #5c6b8e;
+      --row-even: #0d1530;
+      --row-hover: #162040;
+      --border:   rgba(79, 124, 255, 0.18);
+      --radius:   8px;
+      --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy-900);
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy-800);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--white);
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .header-meta {
+      font-size: 12px;
+      color: var(--gray-400);
+      text-align: right;
+    }
+
+    .header-meta strong {
+      display: block;
+      color: var(--teal);
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(160deg, var(--navy-800) 0%, var(--navy-900) 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 40px 48px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(79, 124, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(79, 124, 255, 0.3);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: var(--white);
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--gray-400);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* ── Main content ── */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 40px 64px;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toolbar-left h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+
+    .toolbar-left p {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+
+    .toolbar-left p span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-500);
+      pointer-events: none;
+    }
+
+    #search {
+      background: var(--navy-700);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 14px;
+      padding: 10px 14px 10px 40px;
+      width: 280px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #search::placeholder { color: var(--gray-500); }
+
+    #search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 124, 255, 0.15);
+    }
+
+    /* ── Table card ── */
+    .table-card {
+      background: var(--navy-800);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--navy-700);
+    }
+
+    th {
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s;
+    }
+
+    th:hover { color: var(--accent); }
+
+    th .sort-icon {
+      display: inline-block;
+      margin-left: 5px;
+      opacity: 0.4;
+      font-size: 10px;
+      transition: opacity 0.15s;
+    }
+
+    th:hover .sort-icon, th.sorted .sort-icon { opacity: 1; color: var(--accent); }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--row-even); }
+    tbody tr:hover {
+      background: linear-gradient(90deg, rgba(79,124,255,0.07) 0%, rgba(79,124,255,0.03) 100%);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .funding-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 7px;
+      flex-shrink: 0;
+      position: relative;
+      top: -1px;
+    }
+    .funding-dot.green  { background: #22c55e; box-shadow: 0 0 5px rgba(34,197,94,0.5); }
+    .funding-dot.yellow { background: #eab308; box-shadow: 0 0 5px rgba(234,179,8,0.5); }
+    .funding-dot.red    { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); }
+
+    td {
+      padding: 16px 20px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    /* Company cell */
+    .company-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 180px;
+    }
+
+    .company-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .company-name {
+      font-weight: 600;
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .company-stage {
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-top: 1px;
+    }
+
+    /* Funding badge */
+    .funding {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 201, 177, 0.1);
+      color: var(--teal);
+      border: 1px solid rgba(0, 201, 177, 0.2);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Year */
+    .year { color: var(--gray-400); font-size: 13px; }
+
+    /* Employees */
+    .employees { color: var(--gray-200); font-size: 13px; font-weight: 500; }
+
+    /* Product tag */
+    .product-tag {
+      display: inline-block;
+      background: rgba(79, 124, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(79, 124, 255, 0.25);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 9px;
+      white-space: nowrap;
+    }
+
+    /* Description */
+    .description {
+      color: var(--gray-400);
+      font-size: 13px;
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gray-500);
+    }
+
+    .no-results svg { margin-bottom: 12px; color: var(--navy-500); }
+    .no-results p { font-size: 15px; font-weight: 500; color: var(--gray-400); }
+    .no-results small { font-size: 13px; }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 160px;
+      background: var(--navy-800);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+
+    .stat-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, var(--teal), transparent); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, #ff7c4f, transparent); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(90deg, #c97bff, transparent); }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--navy-800);
+      border-top: 1px solid var(--border);
+      padding: 28px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-400);
+    }
+
+    .footer-brand strong {
+      color: var(--white);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--gray-500);
+      width: 100%;
+      text-align: center;
+      margin-top: 8px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Chart card ── */
+    .chart-card {
+      background: var(--navy-800);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chart-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.2px;
+    }
+
+    .chart-sub {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .chart-body {
+      padding: 24px;
+      height: 260px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy-900); }
+    ::-webkit-scrollbar-thumb { background: var(--navy-600); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--navy-500); }
+
+    @media (max-width: 768px) {
+      header, main, footer { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 36px 20px 32px; }
+      .toolbar { flex-direction: column; align-items: flex-start; }
+      #search { width: 100%; }
+      .stats-bar { gap: 12px; }
+      .stat-card { min-width: 120px; }
+      .description { max-width: 200px; }
+      td { padding: 12px 14px; }
+      th { padding: 12px 14px; }
+    }
+
+    /* ── Deep Dive Panel ── */
+    .dd-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .dd-overlay.open { opacity: 1; pointer-events: all; }
+
+    .dd-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 420px;
+      height: 100vh;
+      background: var(--navy-800);
+      border-left: 1px solid var(--border);
+      z-index: 200;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .dd-panel.open { transform: translateX(0); }
+
+    .dd-header {
+      position: sticky;
+      top: 0;
+      background: var(--navy-700);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    .dd-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .dd-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .dd-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+
+    .dd-stage {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+
+    .dd-close {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--gray-400);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 6px 10px;
+      line-height: 1;
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .dd-close:hover { background: rgba(255, 255, 255, 0.12); color: var(--white); }
+
+    .dd-body { padding: 24px 20px 36px; flex: 1; }
+
+    .dd-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+      margin-top: 28px;
+    }
+    .dd-body > .dd-section-label:first-child { margin-top: 0; }
+
+    /* Metric cards */
+    .dd-metrics { display: flex; gap: 10px; }
+
+    .dd-metric-card {
+      flex: 1;
+      background: var(--navy-700);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 12px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .dd-metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .dd-metric-card:nth-child(1)::before { background: linear-gradient(90deg, var(--accent), transparent); }
+    .dd-metric-card:nth-child(2)::before { background: linear-gradient(90deg, var(--teal), transparent); }
+    .dd-metric-card:nth-child(3)::before { background: linear-gradient(90deg, #c97bff, transparent); }
+
+    .dd-metric-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+    .dd-metric-value {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    /* SWOT */
+    .swot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .swot-quadrant {
+      background: var(--navy-700);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .swot-q-header {
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .swot-q-header.strengths     { background: rgba(0,201,177,0.13);  color: var(--teal);    border-bottom: 1px solid rgba(0,201,177,0.2); }
+    .swot-q-header.weaknesses    { background: rgba(239,68,68,0.11);   color: #ef4444;        border-bottom: 1px solid rgba(239,68,68,0.2); }
+    .swot-q-header.opportunities { background: rgba(79,124,255,0.11);  color: var(--accent);  border-bottom: 1px solid rgba(79,124,255,0.2); }
+    .swot-q-header.threats       { background: rgba(234,179,8,0.11);   color: #eab308;        border-bottom: 1px solid rgba(234,179,8,0.2); }
+
+    .swot-q-body { padding: 10px 12px; }
+    .swot-q-body ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+    .swot-q-body ul li {
+      font-size: 12px;
+      color: var(--gray-200);
+      line-height: 1.45;
+      padding-left: 14px;
+      position: relative;
+    }
+    .swot-q-body ul li::before { content: '•'; position: absolute; left: 2px; color: var(--gray-500); }
+
+    /* Timeline */
+    .dd-timeline { display: flex; flex-direction: column; }
+
+    .dd-tl-item {
+      display: flex;
+      gap: 16px;
+      padding-bottom: 20px;
+    }
+    .dd-tl-item:last-child { padding-bottom: 0; }
+
+    .dd-tl-spine {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 12px;
+    }
+
+    .dd-tl-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--navy-800);
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .dd-tl-line {
+      width: 2px;
+      flex: 1;
+      background: var(--border);
+      margin-top: 4px;
+    }
+    .dd-tl-item:last-child .dd-tl-line { display: none; }
+
+    .dd-tl-content { flex: 1; }
+
+    .dd-tl-round {
+      display: inline-block;
+      background: rgba(79,124,255,0.12);
+      color: var(--accent);
+      border: 1px solid rgba(79,124,255,0.25);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      margin-bottom: 4px;
+    }
+
+    .dd-tl-amount { font-size: 15px; font-weight: 700; color: var(--white); }
+    .dd-tl-date   { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+    tbody tr { cursor: pointer; }
+
+    @media (max-width: 480px) {
+      .dd-panel { width: 100vw; }
+    }
+  </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <img src="hero.png" alt="MarketMind hero" style="display:block;width:100%;height:200px;object-fit:cover;">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">M</div>
+      <div class="logo-text">Market<span>Mind</span></div>
+    </div>
+    <div class="header-meta">
+      <strong>Live Intelligence</strong>
+      Updated May 2026
+    </div>
+  </div>
+</header>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Competitor Intelligence Platform</div>
+  <h1>Know your competition,<br><em>own your market.</em></h1>
+  <p>Real-time insights on the SaaS landscape — funding, headcount, product positioning, and strategic direction in one view.</p>
+</div>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Stats bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card">
+      <div class="stat-label">Companies Tracked</div>
+      <div class="stat-value" id="statCount">5</div>
+      <div class="stat-sub">Active profiles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Funding</div>
+      <div class="stat-value" id="statFunding">$431M</div>
+      <div class="stat-sub">Across all tracked</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Team Size</div>
+      <div class="stat-value" id="statEmployees">294</div>
+      <div class="stat-sub">Employees per company</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Newest Entrant</div>
+      <div class="stat-value" id="statNewest">2021</div>
+      <div class="stat-sub">Most recent founding</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <h2>Competitor Profiles</h2>
+      <p>Showing <span id="rowCount">5</span> of 5 companies</p>
+    </div>
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="search" placeholder="Search companies, products…" autocomplete="off" />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table id="compTable">
+      <thead>
+        <tr>
+          <th data-col="name">Company <span class="sort-icon">↕</span></th>
+          <th data-col="year">Founded <span class="sort-icon">↕</span></th>
+          <th data-col="funding">Funding <span class="sort-icon">↕</span></th>
+          <th data-col="employees">Employees <span class="sort-icon">↕</span></th>
+          <th data-col="product">Key Product <span class="sort-icon">↕</span></th>
+          <th data-col="description">Description</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Funding chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Funding Comparison</div>
+        <div class="chart-sub">Total raised per company ($M)</div>
+      </div>
+    </div>
+    <div class="chart-body">
+      <canvas id="fundingChart"></canvas>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>MarketMind</strong> — Competitor Intelligence
+    </div>
+    <div class="footer-links">
+      <a href="#">Dashboard</a>
+      <a href="#">Reports</a>
+      <a href="#">Alerts</a>
+      <a href="#">Export</a>
+    </div>
+  </div>
+  <div class="footer-inner">
+    <div class="footer-copy">
+      &copy; 2026 MarketMind Inc. Data for informational purposes only. All company data is illustrative.
+    </div>
+  </div>
+</footer>
+
+<!-- ── Deep Dive Panel ── -->
+<div class="dd-overlay" id="ddOverlay" onclick="closeDeepDive()"></div>
+<aside class="dd-panel" id="ddPanel" role="dialog" aria-modal="true" aria-labelledby="ddName">
+  <div class="dd-header">
+    <div class="dd-title-wrap">
+      <div class="dd-avatar" id="ddAvatar"></div>
+      <div>
+        <div class="dd-name" id="ddName"></div>
+        <div class="dd-stage" id="ddStage"></div>
+      </div>
+    </div>
+    <button class="dd-close" onclick="closeDeepDive()" aria-label="Close panel">✕</button>
+  </div>
+  <div class="dd-body">
+    <div class="dd-section-label">Key Metrics</div>
+    <div class="dd-metrics" id="ddMetrics"></div>
+    <div class="dd-section-label">SWOT Analysis</div>
+    <div class="swot-grid" id="ddSwot"></div>
+    <div class="dd-section-label">Funding Timeline</div>
+    <div class="dd-timeline" id="ddTimeline"></div>
+  </div>
+</aside>
+
+<script>
+  const companies = [
+    {
+      name: "Veloxa",
+      stage: "Series C",
+      year: 2018,
+      funding: 142,
+      employees: 430,
+      product: "Revenue Intelligence",
+      description: "AI-driven sales forecasting platform that unifies CRM signals, intent data, and pipeline health into a single revenue command center.",
+      color: "#4f7cff",
+      deepDive: {
+        metrics: { revenue: '$28M ARR', growth: '+67% YoY', headcount: '430' },
+        swot: {
+          strengths:     ['Strong NLP-based forecasting accuracy', 'Deep CRM integrations (Salesforce, HubSpot)', 'Loyal enterprise base with 95% NRR'],
+          weaknesses:    ['Long sales cycles for enterprise deals', 'Sparse SMB product offering', 'Complex UI for non-technical users'],
+          opportunities: ['Expanding into EMEA markets', 'AI model accuracy compounds with more data', 'ERP platform partnerships unlock new channels'],
+          threats:       ['Salesforce building native forecasting tools', 'Rising CAC in saturated sales-tech market', 'Economic headwinds compressing SaaS budgets']
+        },
+        fundingRounds: [
+          { round: 'Seed',     date: 'Q1 2018', amount: '$1.5M'  },
+          { round: 'Series A', date: 'Q3 2019', amount: '$8M'    },
+          { round: 'Series B', date: 'Q2 2021', amount: '$32M'   },
+          { round: 'Series C', date: 'Q4 2023', amount: '$100M'  }
+        ]
+      }
+    },
+    {
+      name: "Driftlane",
+      stage: "Series B",
+      year: 2019,
+      funding: 87,
+      employees: 215,
+      product: "Async Collaboration",
+      description: "Replaces synchronous standups with structured async video threads, automated summaries, and deep integrations across the modern dev stack.",
+      color: "#00c9b1",
+      deepDive: {
+        metrics: { revenue: '$14M ARR', growth: '+89% YoY', headcount: '215' },
+        swot: {
+          strengths:     ['First-mover in async video for dev teams', 'Strong product-led growth motion', 'High NPS scores across all customer segments'],
+          weaknesses:    ['Niche positioning limits total addressable market', 'Dependent on continued remote-work adoption', 'Limited enterprise security and compliance features'],
+          opportunities: ['Post-pandemic hybrid work normalization driving demand', 'API marketplace expansion into new verticals', 'Enterprise compliance add-ons as upsell'],
+          threats:       ['Loom and Notion expanding into async video', 'Zoom adding native async features', 'Market consolidation risk from well-funded rivals']
+        },
+        fundingRounds: [
+          { round: 'Seed',     date: 'Q2 2019', amount: '$2M'   },
+          { round: 'Series A', date: 'Q1 2020', amount: '$15M'  },
+          { round: 'Series B', date: 'Q3 2022', amount: '$70M'  }
+        ]
+      }
+    },
+    {
+      name: "Coreva",
+      stage: "Series D",
+      year: 2016,
+      funding: 134,
+      employees: 610,
+      product: "Data Governance",
+      description: "Enterprise-grade data cataloging and lineage platform trusted by Fortune 500 data teams to enforce compliance, quality, and discoverability at scale.",
+      color: "#ff7c4f",
+      deepDive: {
+        metrics: { revenue: '$52M ARR', growth: '+31% YoY', headcount: '610' },
+        swot: {
+          strengths:     ['Deep regulatory compliance expertise', '200+ Fortune 500 clients on long-term contracts', 'Proprietary data lineage engine with no direct equivalent'],
+          weaknesses:    ['Months-long onboarding slows time-to-value', 'Legacy codebase creates technical debt burden', 'High churn in SMB segment due to cost and complexity'],
+          opportunities: ['AI governance regulation driving enterprise demand', 'Data mesh architecture adoption as a tailwind', 'EU AI Act and global privacy laws expanding TAM'],
+          threats:       ['Databricks and Snowflake adding native governance layers', 'Open-source alternatives gaining enterprise traction', 'Margin compression from hyperscaler competition']
+        },
+        fundingRounds: [
+          { round: 'Seed',     date: 'Q3 2016', amount: '$2M'   },
+          { round: 'Series A', date: 'Q1 2017', amount: '$10M'  },
+          { round: 'Series B', date: 'Q2 2019', amount: '$22M'  },
+          { round: 'Series C', date: 'Q4 2021', amount: '$50M'  },
+          { round: 'Series D', date: 'Q1 2024', amount: '$50M'  }
+        ]
+      }
+    },
+    {
+      name: "Synaptiq",
+      stage: "Series A",
+      year: 2021,
+      funding: 38,
+      employees: 92,
+      product: "AI Workflow Builder",
+      description: "No-code platform for building context-aware AI automation pipelines, connecting LLMs to internal tools, databases, and APIs without engineering overhead.",
+      color: "#c97bff",
+      deepDive: {
+        metrics: { revenue: '$4M ARR', growth: '+210% YoY', headcount: '92' },
+        swot: {
+          strengths:     ['Fastest-growing PLG adoption curve in the segment', '300+ pre-built AI connectors out of the box', 'Zero-code onboarding in under 15 minutes'],
+          weaknesses:    ['Small team limits enterprise support capacity', 'Shallow integration depth vs. custom-built solutions', 'Brand recognition still limited outside early adopters'],
+          opportunities: ['LLM commoditization drives demand for orchestration layers', 'Cloud provider partnerships accelerating distribution', 'SMB automation budgets expanding rapidly'],
+          threats:       ['OpenAI and Anthropic building competing workflow products', 'Well-funded incumbents like Zapier and Make defending share', 'Rapid model obsolescence requires constant connector updates']
+        },
+        fundingRounds: [
+          { round: 'Seed',     date: 'Q2 2021', amount: '$3M'   },
+          { round: 'Series A', date: 'Q3 2023', amount: '$35M'  }
+        ]
+      }
+    },
+    {
+      name: "Archway",
+      stage: "Series B",
+      year: 2017,
+      funding: 30,
+      employees: 124,
+      product: "Customer Data Platform",
+      description: "Composable CDP that gives growth and marketing teams a real-time unified profile layer — built to sit on top of modern data warehouses, not replace them.",
+      color: "#ffcd4f",
+      deepDive: {
+        metrics: { revenue: '$9M ARR', growth: '+44% YoY', headcount: '124' },
+        swot: {
+          strengths:     ['Warehouse-native architecture resonates with modern data teams', 'Low TCO compared to legacy CDPs like Segment', 'Flexible real-time segmentation engine'],
+          weaknesses:    ['Lacks robust real-time activation for paid media use cases', 'Limited customer success team constrains expansion revenue', 'Weak brand awareness vs. Segment and mParticle'],
+          opportunities: ['Third-party cookie deprecation accelerating first-party data demand', 'Growing Snowflake and BigQuery ecosystems as distribution channels', 'Mid-market CDP whitespace largely uncontested'],
+          threats:       ['Snowflake and Databricks offering CDP-like features natively', 'Adobe and Salesforce locking in enterprise budgets', 'Privacy regulation complexity increasing compliance costs']
+        },
+        fundingRounds: [
+          { round: 'Seed',     date: 'Q4 2017', amount: '$1M'   },
+          { round: 'Series A', date: 'Q2 2019', amount: '$9M'   },
+          { round: 'Series B', date: 'Q1 2022', amount: '$20M'  }
+        ]
+      }
+    }
+  ];
+
+  let filtered = [...companies];
+  let sortCol = null;
+  let sortDir = 1;
+
+  function initials(name) {
+    return name.slice(0, 2).toUpperCase();
+  }
+
+  function fundingDot(funding) {
+    const cls = funding > 50 ? 'green' : funding >= 10 ? 'yellow' : 'red';
+    return `<span class="funding-dot ${cls}" title="${funding > 50 ? 'High funding (>$50M)' : funding >= 10 ? 'Mid funding ($10–50M)' : 'Low funding (<$10M)'}"></span>`;
+  }
+
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    document.getElementById('rowCount').textContent = data.length;
+
+    if (data.length === 0) {
+      tbody.innerHTML = `
+        <tr><td colspan="6">
+          <div class="no-results">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <p>No companies match your search</p>
+            <small>Try a different keyword or clear the filter</small>
+          </div>
+        </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(c => `
+      <tr onclick="openDeepDive('${c.name}')" title="Click for Deep Dive">
+        <td>
+          <div class="company-cell">
+            <div class="company-avatar" style="background:${c.color}20;color:${c.color};border:1.5px solid ${c.color}40">
+              ${initials(c.name)}
+            </div>
+            <div>
+              <div class="company-name">${fundingDot(c.funding)}${c.name}</div>
+              <div class="company-stage">${c.stage}</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="year">${c.year}</span></td>
+        <td><span class="funding">$${c.funding}M</span></td>
+        <td><span class="employees">${c.employees.toLocaleString()}</span></td>
+        <td><span class="product-tag">${c.product}</span></td>
+        <td><div class="description">${c.description}</div></td>
+      </tr>
+    `).join('');
+  }
+
+  function updateStats(data) {
+    const totalFunding = data.reduce((s, c) => s + c.funding, 0);
+    const avgEmp = data.length ? Math.round(data.reduce((s, c) => s + c.employees, 0) / data.length) : 0;
+    const newest = data.length ? Math.max(...data.map(c => c.year)) : '—';
+
+    document.getElementById('statCount').textContent = data.length;
+    document.getElementById('statFunding').textContent = data.length ? `$${totalFunding}M` : '$0';
+    document.getElementById('statEmployees').textContent = avgEmp;
+    document.getElementById('statNewest').textContent = newest;
+  }
+
+  function applyFilter() {
+    const q = document.getElementById('search').value.toLowerCase().trim();
+    filtered = companies.filter(c =>
+      !q ||
+      c.name.toLowerCase().includes(q) ||
+      c.product.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q) ||
+      c.stage.toLowerCase().includes(q) ||
+      String(c.year).includes(q)
+    );
+    if (sortCol) applySort(false);
+    renderTable(filtered);
+    updateStats(filtered);
+  }
+
+  function applySort(toggle = true) {
+    if (toggle) {
+      const col = this.dataset.col;
+      if (sortCol === col) {
+        sortDir *= -1;
+      } else {
+        sortCol = col;
+        sortDir = 1;
+      }
+      document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+      this.classList.add('sorted');
+    }
+
+    filtered.sort((a, b) => {
+      let av = a[sortCol], bv = b[sortCol];
+      if (typeof av === 'string') av = av.toLowerCase();
+      if (typeof bv === 'string') bv = bv.toLowerCase();
+      return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    });
+  }
+
+  document.getElementById('search').addEventListener('input', applyFilter);
+
+  document.querySelectorAll('th[data-col]').forEach(th => {
+    th.addEventListener('click', function () {
+      const col = this.dataset.col;
+      if (sortCol === col) {
+        sortDir *= -1;
+      } else {
+        sortCol = col;
+        sortDir = 1;
+      }
+      document.querySelectorAll('th').forEach(t => t.classList.remove('sorted'));
+      this.classList.add('sorted');
+
+      filtered.sort((a, b) => {
+        let av = a[col], bv = b[col];
+        if (typeof av === 'string') av = av.toLowerCase();
+        if (typeof bv === 'string') bv = bv.toLowerCase();
+        return av < bv ? -sortDir : av > bv ? sortDir : 0;
+      });
+
+      renderTable(filtered);
+    });
+  });
+
+  // ── Deep Dive ──
+  function openDeepDive(name) {
+    const c = companies.find(x => x.name === name);
+    if (!c) return;
+    const d = c.deepDive;
+
+    // Header
+    const av = document.getElementById('ddAvatar');
+    av.textContent = initials(c.name);
+    av.style.cssText = `background:${c.color}20;color:${c.color};border:1.5px solid ${c.color}40`;
+    document.getElementById('ddName').textContent  = c.name;
+    document.getElementById('ddStage').textContent = c.stage;
+
+    // Metrics
+    const metricDefs = [
+      { label: 'Revenue',     value: d.metrics.revenue   },
+      { label: 'Growth',      value: d.metrics.growth    },
+      { label: 'Headcount',   value: d.metrics.headcount }
+    ];
+    document.getElementById('ddMetrics').innerHTML = metricDefs.map(m => `
+      <div class="dd-metric-card">
+        <div class="dd-metric-label">${m.label}</div>
+        <div class="dd-metric-value">${m.value}</div>
+      </div>`).join('');
+
+    // SWOT
+    const swotDefs = [
+      { key: 'strengths',     label: 'Strengths',     cls: 'strengths'     },
+      { key: 'weaknesses',    label: 'Weaknesses',    cls: 'weaknesses'    },
+      { key: 'opportunities', label: 'Opportunities', cls: 'opportunities' },
+      { key: 'threats',       label: 'Threats',       cls: 'threats'       }
+    ];
+    document.getElementById('ddSwot').innerHTML = swotDefs.map(s => `
+      <div class="swot-quadrant">
+        <div class="swot-q-header ${s.cls}">${s.label}</div>
+        <div class="swot-q-body">
+          <ul>${d.swot[s.key].map(b => `<li>${b}</li>`).join('')}</ul>
+        </div>
+      </div>`).join('');
+
+    // Timeline
+    document.getElementById('ddTimeline').innerHTML = d.fundingRounds.map(r => `
+      <div class="dd-tl-item">
+        <div class="dd-tl-spine">
+          <div class="dd-tl-dot"></div>
+          <div class="dd-tl-line"></div>
+        </div>
+        <div class="dd-tl-content">
+          <div class="dd-tl-round">${r.round}</div>
+          <div class="dd-tl-amount">${r.amount}</div>
+          <div class="dd-tl-date">${r.date}</div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('ddPanel').classList.add('open');
+    document.getElementById('ddOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDeepDive() {
+    document.getElementById('ddPanel').classList.remove('open');
+    document.getElementById('ddOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDeepDive(); });
+
+  // Init
+  renderTable(companies);
+  updateStats(companies);
+
+  // Funding chart
+  const chartColors = companies.map(c => c.color);
+  const fundingChart = new Chart(document.getElementById('fundingChart'), {
+    type: 'bar',
+    data: {
+      labels: companies.map(c => c.name),
+      datasets: [{
+        label: 'Total Funding ($M)',
+        data: companies.map(c => c.funding),
+        backgroundColor: chartColors.map(c => c + '33'),
+        borderColor: chartColors,
+        borderWidth: 2,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f1729',
+          borderColor: 'rgba(79,124,255,0.3)',
+          borderWidth: 1,
+          titleColor: '#d8e0f3',
+          bodyColor: '#8b9abf',
+          padding: 12,
+          callbacks: {
+            label: ctx => `  $${ctx.parsed.x}M total raised`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(79,124,255,0.08)', drawBorder: false },
+          ticks: {
+            color: '#5c6b8e',
+            font: { size: 12 },
+            callback: v => `$${v}M`
+          },
+          border: { display: false }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#d8e0f3', font: { size: 13, weight: '600' } },
+          border: { display: false }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
