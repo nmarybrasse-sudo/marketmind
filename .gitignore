@@ -1,0 +1,36 @@
+nanobanana-output/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Home-directory system folders — not part of this project
+.Trash/
+.cache/
+.cups/
+.cursor/
+.lmstudio/
+.lmstudio-home-pointer
+.matplotlib/
+.npm/
+.zsh_history
+.zsh_sessions/
+.CFUserTextEncoding
+Library/
+Applications/
+Movies/
+Music/
+Pictures/
+Public/
+Documents/
+Downloads/
+Google\ Drive
+OneDrive*
+Desktop/
+
+# Shell / editor config
+.zshrc
+.gitconfig
+.claude.json
+.claude.json.backup
